@@ -80,4 +80,10 @@ public abstract class Shape {
 	abstract public void move(int dx, int dy);
 
 	abstract public boolean contains(int x, int y);
+	
+	abstract public int isBoundary (int x , int y);
+
+	abstract public void resize(int dx, int dy , int index);
+	
+	abstract public void updatePoints();
 }

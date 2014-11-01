@@ -122,7 +122,7 @@ public class Main_Test {
 		Shape.addShape(new Circle(300, 300, 100, 100));
 		Shape.addShape(new Line(100, 100, 500, 400));
 		Shape.shapes.get(0).setFilled(true);
-		Shape.shapes.get(1).setFilled(true);
+		//Shape.shapes.get(1).setFilled(true);
 		// Shape.shapes.get(2).setFilled(true);
 		Shape.shapes.get(0).setFill(Color.BLUE);
 		Shape.shapes.get(1).setFill(Color.RED);
@@ -171,11 +171,12 @@ public class Main_Test {
 			int xInit, yInit, xFinal, yFinal;
 			Cursor curCursor;
 			int selectedShape = -1;
-
+			int boundaryIndex = -1;
 			class MyMouseListener extends MouseAdapter {
 				public void mousePressed(MouseEvent e) {
 					selectedShape = Shape.getSelectedShape(e.getX(), e.getY());
 					if (selectedShape != -1) {
+						boundaryIndex = Shape.shapes.get(selectedShape).isBoundary(e.getX(), e.getY());
 						xInit = e.getX();
 						yInit = e.getY();
 						curCursor = Cursor
@@ -199,7 +200,8 @@ public class Main_Test {
 						int dy = yFinal - yInit;
 						xInit = xFinal;
 						yInit = yFinal;
-						Shape.shapes.get(selectedShape).move(dx, dy);
+						if (boundaryIndex != -1) Shape.shapes.get(selectedShape).resize(dy, dy, boundaryIndex);
+						else Shape.shapes.get(selectedShape).move(dx, dy);
 						Shape S = Shape.shapes.get(selectedShape);
 						Shape.shapes.remove(selectedShape);
 						Shape.shapes.add(S);

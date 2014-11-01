@@ -53,5 +53,17 @@ public class Poly extends Shape {
 	public boolean contains(int x, int y) {
 		return P.contains(x,y);
 	}
+
+	@Override
+	public int isBoundary(int x, int y) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void resize(int dx, int dy) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }
