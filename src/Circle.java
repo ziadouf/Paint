@@ -15,12 +15,22 @@ public class Circle extends Shape {
 	private int yBounds[] = new int[4];
 	private Double[] boundries = new Rectangle2D.Double[4];
 	private Ellipse2D E;
-
+	private boolean isCircle = false;
+	
 	Circle(int x, int y, int a, int b) {
 		this.x = x;
 		this.y = y;
 		this.a = a;
 		this.b = b;
+		updatePoints();
+	}
+	
+	Circle(int x, int y, int a, int b, boolean isCircle) {
+		this.x = x;
+		this.y = y;
+		this.a = a;
+		this.b = b;
+		this.isCircle = isCircle;
 		updatePoints();
 	}
 
@@ -57,23 +67,28 @@ public class Circle extends Shape {
 
 	@Override
 	public boolean contains(int x, int y) {
-		return E.contains(x, y);
+		return (E.contains(x, y) || isBoundary(x,y) != -1);
 	}
 	
-	public void resize(int da , int db , int index) {
+	public void resize(int dx , int dy , int index) {
+		
 		if (index == 0) {
-			this.y += db;
-			this.b -= db;
+			this.y += dy;
+			this.b -= dy;
+			if (isCircle) this.a = this.b;
 		}
 		else if (index == 1) {
-			this.x += da;
-			this.a -= da;
+			this.x += dx;
+			this.a -= dx;
+			if (isCircle) this.b = this.a;
 		}
 		else if (index == 2) {
-			this.a += da;
+			this.a += dx;
+			if (isCircle) this.b = this.a;
 		}
 		else {
-			this.b += db;
+			this.b += dy;
+			if (isCircle) this.a = this.b;
 		}
 		updatePoints();
 	}

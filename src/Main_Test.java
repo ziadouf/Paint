@@ -114,14 +114,19 @@ public class Main_Test {
 		 * {150, 100, 125, 225, 250, 375, 300};
 		 */
 
-		int xPoly[] = { 100, 100, 200, 200 };
-		int yPoly[] = { 100, 200, 200, 100 };
+		int xPoly[] = { 100, 200, 200, 100 };
+		int yPoly[] = { 100, 100, 200, 200 };
 
-		poly = new Poly(xPoly, yPoly, xPoly.length);
+		int x2Poly[] = { 300, 400, 400, 300 };
+		int y2Poly[] = { 300, 300, 400, 400 };
+		
+		poly = new Rect(xPoly, yPoly, xPoly.length);
 		Shape.addShape(poly);
-		Shape.addShape(new Circle(300, 300, 100, 100));
+		Shape.addShape(new Circle(200, 200, 100, 100,true));
+		Shape.addShape(new Circle(400, 400, 200, 200));
 		Shape.addShape(new Line(100, 100, 500, 400));
-		Shape.shapes.get(0).setFilled(true);
+		Shape.addShape(new Rect(x2Poly, y2Poly, x2Poly.length,true));
+		//Shape.shapes.get(0).setFilled(true);
 		//Shape.shapes.get(1).setFilled(true);
 		// Shape.shapes.get(2).setFilled(true);
 		Shape.shapes.get(0).setFill(Color.BLUE);
@@ -130,99 +135,7 @@ public class Main_Test {
 
 		color = Color.BLUE;
 
-		JPanel p = new JPanel() {
-
-			int xPoly[] = { 400, 200, 600 };
-			int yPoly[] = { 400, 600, 600 };
-
-			// int x = 300 , y = 300 , a = 100;
-
-			@Override
-			protected void paintComponent(Graphics g) {
-				Graphics2D g2D = (Graphics2D) g;
-				super.paintComponent(g);
-				for (int i = 0; i < Shape.shapes.size(); i++) {
-					Shape.shapes.get(i).draw(g2D);
-				}
-				if (curCursor != null)
-			        setCursor(curCursor);
-				/*
-				 * Scanner sc = new Scanner(System.in); for (int i=0 ; i<1 ;
-				 * i++) { System.out.println("Enter Vertices:"); int N; N =
-				 * sc.nextInt(); int xPoly[] = new int[100]; int yPoly[] = new
-				 * int[100]; int cur = 0; for (int j=0 ; j<N ; j++) { int x,y; x
-				 * = sc.nextInt(); y = sc.nextInt(); xPoly[cur] = x;
-				 * yPoly[cur++] = y; }
-				 * 
-				 * Poly p = new Poly(xPoly,yPoly,cur); p.draw(g2D); pp = p; }
-				 * sc.close(); //pp = new Poly(xPoly, yPoly, xPoly.length);
-				 * 
-				 * //pp = new Line (100,100,200,200); pp.draw(g2D);
-				 */
-				addMouseListener(new MyMouseListener());
-				addMouseMotionListener(new MyMouseMotionListener());
-			}
-
-			@Override
-			public Dimension getPreferredSize() {
-				return new Dimension(800, 600);
-			}
-
-			int xInit, yInit, xFinal, yFinal;
-			Cursor curCursor;
-			int selectedShape = -1;
-			int boundaryIndex = -1;
-			class MyMouseListener extends MouseAdapter {
-				public void mousePressed(MouseEvent e) {
-					selectedShape = Shape.getSelectedShape(e.getX(), e.getY());
-					if (selectedShape != -1) {
-						boundaryIndex = Shape.shapes.get(selectedShape).isBoundary(e.getX(), e.getY());
-						xInit = e.getX();
-						yInit = e.getY();
-						curCursor = Cursor
-								.getPredefinedCursor(Cursor.HAND_CURSOR);
-					}
-					repaint();
-				}
-				
-				public void mouseReleased(MouseEvent e) {
-					curCursor = Cursor.getDefaultCursor();
-					repaint();
-				}
-			}
-
-			class MyMouseMotionListener extends MouseMotionAdapter {
-				public void mouseDragged(MouseEvent e) {
-					if (selectedShape != -1) {
-						xFinal = e.getX();
-						yFinal = e.getY();
-						int dx = xFinal - xInit;
-						int dy = yFinal - yInit;
-						xInit = xFinal;
-						yInit = yFinal;
-						if (boundaryIndex != -1) Shape.shapes.get(selectedShape).resize(dy, dy, boundaryIndex);
-						else Shape.shapes.get(selectedShape).move(dx, dy);
-						Shape S = Shape.shapes.get(selectedShape);
-						Shape.shapes.remove(selectedShape);
-						Shape.shapes.add(S);
-						selectedShape = Shape.shapes.size() - 1;
-					}
-					repaint();
-				}
-				
-				public void mouseMoved(MouseEvent e) {
-					if (selectedShape != -1) {
-						curCursor = Cursor
-								.getPredefinedCursor(Cursor.HAND_CURSOR);
-					} else {
-						curCursor = Cursor.getDefaultCursor();
-					}
-
-					//repaint();
-				}
-			}
-
-		};
+		JPanel p = new GUIPanel();
 
 		mainMap.add(p);
 

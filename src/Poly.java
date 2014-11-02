@@ -1,20 +1,34 @@
 import java.awt.BasicStroke;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
+import java.awt.geom.Rectangle2D;
+import java.awt.geom.Rectangle2D.Double;
 
 
 public class Poly extends Shape {
 	
-	private int xPoly[];
-	private int yPoly[];
-	private int length;
-	private Polygon P;
-
+	protected int xPoly[];
+	protected int yPoly[];
+	protected int length;
+	protected Polygon P;
+	protected Double[] boundries;
+	protected boolean isRegular;
+	
 	Poly (int x[] , int y[] , int length) {
 		this.xPoly = x;
 		this.yPoly = y;
 		this.length = length;
-		P = new Polygon(xPoly, yPoly, length);
+		boundries = new Rectangle2D.Double[length];
+		updatePoints();
+	}
+	
+	Poly (int x[] , int y[] , int length, boolean isRegular) {
+		this.xPoly = x;
+		this.yPoly = y;
+		this.length = length;
+		boundries = new Rectangle2D.Double[length];
+		this.isRegular = isRegular;
+		updatePoints();
 	}
 	
 	public Polygon getPolygon () {
@@ -25,7 +39,13 @@ public class Poly extends Shape {
 	public void draw(Graphics2D g) {
 		g.setColor(getColor());
 		g.setStroke(new BasicStroke(getThickness()));
-		if (isDashed()) g.setStroke(dashed);
+		if (isDashed()) {
+			//g.setStroke(dashed);
+			int S = 8;
+			for (int i=0 ; i<xPoly.length ; i++) {
+				g.drawRect(xPoly[i]-S/2, yPoly[i]-S/2, S, S);
+			}
+		}
 		g.drawPolygon(P);
 		if (isFilled()) {
 			g.setColor(getFill());
@@ -41,29 +61,39 @@ public class Poly extends Shape {
 
 	@Override
 	public void move(int dx , int dy) {
+		System.out.println("HERE");
 		for (int i=0 ; i<length ; i++) {
 			xPoly[i] += dx;
 			yPoly[i] += dy;
 		}
-		P = new Polygon(xPoly, yPoly, length);
-		System.out.println(dx + " " + dy);
+		updatePoints();
 	}
 
 	@Override
 	public boolean contains(int x, int y) {
-		return P.contains(x,y);
+		return (P.contains(x, y) || isBoundary(x,y) != -1);
 	}
 
 	@Override
 	public int isBoundary(int x, int y) {
-		// TODO Auto-generated method stub
-		return 0;
+		for (int i=0 ; i<boundries.length ; i++) {
+			if (boundries[i].contains(x,y)) return i;
+		}
+		
+		return -1;
 	}
 
 	@Override
-	public void resize(int dx, int dy) {
-		// TODO Auto-generated method stub
-		
+	public void resize(int dx, int dy, int index) {
+	}
+
+	@Override
+	public void updatePoints() {
+		P = new Polygon(xPoly, yPoly, length);
+		int S = 8;
+		for (int i=0 ; i<xPoly.length ; i++) {
+			boundries[i] = new Rectangle2D.Double(xPoly[i]-S/2, yPoly[i]-S/2, S, S);
+		}
 	}
 	
 }
