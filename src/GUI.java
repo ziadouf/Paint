@@ -37,19 +37,11 @@ import java.util.Arrays;
 public class GUI extends JFrame {
 
 	private JPanel contentPane;
-	static boolean drawLine = false;
-	private int selectedButton[] = new int[10];
+	static int drawState = Constants.MOVE;
+	static int drawThick = 1 ;
+	//private int selectedButton[] = new int[10];
 	ButtonGroup buttonGroup = new ButtonGroup();
-//	static enum drawState {
-//		MOVE: 0,
-//		LINE: 1,
-//		ELLIPSE: 2,
-//		CIRCLE: 3,
-//		RECTANGLE: 4,
-//		SQUARE: 5,
-//		TRIANGLE: 6,
-//		POLYGON: 7
-//	};
+
 	/**
 	 * Launch the application.
 	 */
@@ -69,6 +61,7 @@ public class GUI extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public GUI() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 700, 500);
@@ -102,33 +95,67 @@ public class GUI extends JFrame {
 		contentPane.add(toolBar, BorderLayout.WEST);
 		
 		JToggleButton tglbtnMove = new JToggleButton("Move");
+		tglbtnMove.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {				
+				drawState = Constants.MOVE;
+			}
+		});
 		toolBar.add(tglbtnMove);
 		
 		JToggleButton tglbtnLine = new JToggleButton("Line");
 		tglbtnLine.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				drawLine = true;
-				System.out.println(tglbtnLine.isSelected());
+			public void actionPerformed(ActionEvent e) {				
+				drawState = Constants.LINE;
 			}
 		});
 		toolBar.add(tglbtnLine);
+		
 		JToggleButton tglbtnEllipse = new JToggleButton("Ellipse");
+		tglbtnEllipse.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {				
+				drawState = Constants.ELLIPSE;
+			}
+		});
 		toolBar.add(tglbtnEllipse);
 		
 		JToggleButton tglbtnCircle = new JToggleButton("Circle");
+		tglbtnCircle.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {				
+				drawState = Constants.CIRCLE;
+			}
+		});
 		toolBar.add(tglbtnCircle);
 		
-		JToggleButton tglbtnSquare = new JToggleButton("Square");
-		toolBar.add(tglbtnSquare);
-		
 		JToggleButton tglbtnRectangle = new JToggleButton("Rectangle");
+		tglbtnRectangle.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {				
+				drawState = Constants.RECTANGLE;
+			}
+		});
 		toolBar.add(tglbtnRectangle);
 		
+		JToggleButton tglbtnSquare = new JToggleButton("Square");
+		tglbtnSquare.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {				
+				drawState = Constants.SQUARE;
+			}
+		});
+		toolBar.add(tglbtnSquare);
+		
 		JToggleButton tglbtnTriangle = new JToggleButton("Triangle");
+		tglbtnTriangle.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {				
+				drawState = Constants.TRIANGLE;
+			}
+		});
 		toolBar.add(tglbtnTriangle);
 		
 		JToggleButton tglbtnPolygon = new JToggleButton("Polygon");
+		tglbtnPolygon.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {				
+				drawState = Constants.POLYGON;
+			}
+		});
 		toolBar.add(tglbtnPolygon);
 		
 		JSeparator separator = new JSeparator();
@@ -156,7 +183,11 @@ public class GUI extends JFrame {
 		toolBar.add(lblThickness);
 		
 		JComboBox comboBox = new JComboBox();
-		comboBox.setName("");
+		comboBox.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				drawThick = Integer.parseInt((String) comboBox.getSelectedItem());
+			}
+		});
 		comboBox.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"}));
 		comboBox.setMaximumSize(new Dimension(70, 30));
 		toolBar.add(comboBox);

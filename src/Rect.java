@@ -53,7 +53,6 @@ public class Rect extends Poly {
 		P = new Polygon(xPoly, yPoly, length);
 		int S = 8;
 		for (int i=0 ; i<xPoly.length ; i++) {
-//			System.out.println(xPoly[i] + " " + yPoly[i]);
 			boundries[i] = new Rectangle2D.Double(xPoly[i]-S/2, yPoly[i]-S/2, S, S);
 		}
 	}

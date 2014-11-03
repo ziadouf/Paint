@@ -11,7 +11,6 @@ public class Poly extends Shape {
 	protected int yPoly[];
 	protected int length;
 	protected Polygon P;
-	protected Double[] boundries;
 	protected boolean isRegular;
 	
 	Poly (int x[] , int y[] , int length) {
@@ -37,8 +36,6 @@ public class Poly extends Shape {
 	
 	@Override
 	public void draw(Graphics2D g) {
-		g.setColor(getColor());
-		g.setStroke(new BasicStroke(getThickness()));
 		if (isDashed()) {
 			//g.setStroke(dashed);
 			int S = 8;
@@ -46,6 +43,8 @@ public class Poly extends Shape {
 				g.drawRect(xPoly[i]-S/2, yPoly[i]-S/2, S, S);
 			}
 		}
+		g.setColor(getColor());
+		g.setStroke(new BasicStroke(getThickness()));
 		g.drawPolygon(P);
 		if (isFilled()) {
 			g.setColor(getFill());
@@ -61,7 +60,6 @@ public class Poly extends Shape {
 
 	@Override
 	public void move(int dx , int dy) {
-		System.out.println("HERE");
 		for (int i=0 ; i<length ; i++) {
 			xPoly[i] += dx;
 			yPoly[i] += dy;
@@ -74,14 +72,6 @@ public class Poly extends Shape {
 		return (P.contains(x, y) || isBoundary(x,y) != -1);
 	}
 
-	@Override
-	public int isBoundary(int x, int y) {
-		for (int i=0 ; i<boundries.length ; i++) {
-			if (boundries[i].contains(x,y)) return i;
-		}
-		
-		return -1;
-	}
 
 	@Override
 	public void resize(int dx, int dy, int index) {

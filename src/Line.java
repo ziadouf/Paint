@@ -12,26 +12,26 @@ public class Line extends Shape {
 	private int y2;
 	private int xBounds[] = new int[2];
 	private int yBounds[] = new int[2];
-	private Double[] boundries = new Rectangle2D.Double[2];
 	
 	Line(int x1, int y1, int x2, int y2) {
 		this.x1 = x1;
 		this.x2 = x2;
 		this.y1 = y1;
 		this.y2 = y2;
+		boundries = new Rectangle2D.Double[2];
 		updatePoints();
 	}
 
 	@Override
 	public void draw(Graphics2D g) {
-		g.setColor(getColor());
-		g.setStroke(new BasicStroke(getThickness()));
 		if (isDashed()) {
 			//g.setStroke(dashed);
 			int S = 8;
 			for (int i=0 ; i<xBounds.length ; i++) {
 				g.drawRect(xBounds[i]-S/2, yBounds[i]-S/2, S, S);			}
 		}
+		g.setColor(getColor());
+		g.setStroke(new BasicStroke(getThickness()));
 		g.drawLine(x1, y1, x2, y2);
 	}
 
@@ -52,14 +52,6 @@ public class Line extends Shape {
 	@Override
 	public boolean contains(int x, int y) {
 		return (Line2D.ptSegDist(x1, y1, x2, y2, x, y) <= 4);
-	}
-
-	@Override
-	public int isBoundary(int x, int y) {
-		for (int i=0 ; i<boundries.length ; i++)
-			if (boundries[i].contains(x,y)) return i;
-		
-		return -1;
 	}
 
 	@Override

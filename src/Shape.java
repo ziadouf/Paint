@@ -1,6 +1,7 @@
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.geom.Rectangle2D.Double;
 import java.util.ArrayList;
 
 public abstract class Shape {
@@ -10,6 +11,7 @@ public abstract class Shape {
 	private int thickness;
 	private boolean isDashed;
 	private boolean isFilled ;
+	protected Double[] boundries;
 	final static ArrayList<Shape> shapes = new ArrayList<Shape>();
 	final static float dash1[] = { 10.0f };
 	final static BasicStroke dashed = new BasicStroke(1.0f,
@@ -72,6 +74,14 @@ public abstract class Shape {
 		return -1;
 
 	}
+	
+	public int isBoundary(int x, int y) {
+		for (int i=0 ; i<boundries.length ; i++) {
+			if (boundries[i].contains(x,y)) return i;
+		}
+		
+		return -1;
+	}
 
 	abstract public void draw(Graphics2D g);
 
@@ -81,8 +91,6 @@ public abstract class Shape {
 
 	abstract public boolean contains(int x, int y);
 	
-	abstract public int isBoundary (int x , int y);
-
 	abstract public void resize(int dx, int dy , int index);
 	
 	abstract public void updatePoints();

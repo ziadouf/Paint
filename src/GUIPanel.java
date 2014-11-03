@@ -8,9 +8,8 @@ import java.awt.event.MouseMotionAdapter;
 
 import javax.swing.JPanel;
 
-
 public class GUIPanel extends JPanel {
-	
+
 	@Override
 	protected void paintComponent(Graphics g) {
 		Graphics2D g2D = (Graphics2D) g;
@@ -19,7 +18,7 @@ public class GUIPanel extends JPanel {
 			Shape.shapes.get(i).draw(g2D);
 		}
 		if (curCursor != null)
-	        setCursor(curCursor);
+			setCursor(curCursor);
 		addMouseListener(new MyMouseListener());
 		addMouseMotionListener(new MyMouseMotionListener());
 	}
@@ -28,33 +27,76 @@ public class GUIPanel extends JPanel {
 	Cursor curCursor;
 	int selectedShape = -1;
 	int boundaryIndex = -1;
+
 	class MyMouseListener extends MouseAdapter {
 		public void mousePressed(MouseEvent e) {
-			if (GUI.drawLine) {
-				//Shape.addShape(new Line(e.getX(),e.getY(),e.getX(),e.getY()));
+			System.out.println(GUI.drawState);
+			if (GUI.drawState == Constants.RECTANGLE) {
 				int x[] = new int[4];
 				int y[] = new int[4];
-				for (int i=0 ; i<4 ; i++) {
+				for (int i = 0; i < 4; i++) {
 					x[i] = e.getX();
 					y[i] = e.getY();
-					
+
 				}
-				Shape.addShape(new Rect(x,y,x.length));
-				GUI.drawLine = false;
+				Shape.addShape(new Rect(x, y, x.length));
 			}
-			else {
+			else if(GUI.drawState == Constants.SQUARE)
+			{
+				int x[] = new int [4];
+				int y[] = new int [4];
+				for (int i = 0; i < 4; i++) {
+					x[i] = e.getX();
+					y[i] = e.getY();
+
+				}
+				Shape.addShape(new Rect(x, y, x.length,true));
+			}
+			else if(GUI.drawState == Constants.ELLIPSE)
+			{
+				int a = 0;
+				int b = 0;
+				Shape.addShape(new Circle(e.getX(), e.getY(), a, b));
+			}
+			else if(GUI.drawState == Constants.CIRCLE)
+			{
+				int a = 0;
+				int b = 0;
+				Shape.addShape(new Circle(e.getX(), e.getY(), a, b, true));
+			}
+			else if(GUI.drawState == Constants.LINE)
+			{
+				 Shape.addShape(new
+				 Line(e.getX(),e.getY(),e.getX(),e.getY()));
+			}
+			else if(GUI.drawState == Constants.TRIANGLE)
+			{
+				int x[] = new int [4];
+				int y[] = new int [4];
+				for (int i = 0; i < 4; i++) {
+					x[i] = e.getX();
+					y[i] = e.getY();
+
+				}
+				Shape.addShape(new Triangle(x, y, x.length));
+			} else if (GUI.drawState == Constants.MOVE) {
 				selectedShape = Shape.getSelectedShape(e.getX(), e.getY());
 				if (selectedShape != -1) {
-					boundaryIndex = Shape.shapes.get(selectedShape).isBoundary(e.getX(), e.getY());
+					boundaryIndex = Shape.shapes.get(selectedShape).isBoundary(
+							e.getX(), e.getY());
 					xInit = e.getX();
 					yInit = e.getY();
-					curCursor = Cursor
-							.getPredefinedCursor(Cursor.HAND_CURSOR);
+					curCursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
 				}
 			}
+			
+			if (GUI.drawState != Constants.MOVE)
+				Shape.shapes.get(Shape.shapes.size()-1).setThickness(GUI.drawThick);
+			
+			GUI.drawState = Constants.MOVE;
 			repaint();
 		}
-		
+
 		public void mouseReleased(MouseEvent e) {
 			curCursor = Cursor.getDefaultCursor();
 			repaint();
@@ -71,8 +113,11 @@ public class GUIPanel extends JPanel {
 				xInit = xFinal;
 				yInit = yFinal;
 				System.out.println(boundaryIndex);
-				if (boundaryIndex != -1) Shape.shapes.get(selectedShape).resize(dx, dy, boundaryIndex);
-				else Shape.shapes.get(selectedShape).move(dx, dy);
+				if (boundaryIndex != -1)
+					Shape.shapes.get(selectedShape).resize(dx, dy,
+							boundaryIndex);
+				else
+					Shape.shapes.get(selectedShape).move(dx, dy);
 				Shape S = Shape.shapes.get(selectedShape);
 				Shape.shapes.remove(selectedShape);
 				Shape.shapes.add(S);
@@ -80,11 +125,10 @@ public class GUIPanel extends JPanel {
 			}
 			repaint();
 		}
-		
+
 		public void mouseMoved(MouseEvent e) {
 			if (selectedShape != -1) {
-				curCursor = Cursor
-						.getPredefinedCursor(Cursor.HAND_CURSOR);
+				curCursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
 			} else {
 				curCursor = Cursor.getDefaultCursor();
 			}
