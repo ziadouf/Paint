@@ -16,6 +16,8 @@ public class Triangle extends Poly {
 	
 	@Override
 	public void draw(Graphics2D g) {
+		g.setColor(Constants.DEFAULT_COLOR);
+		g.setStroke(new BasicStroke(Constants.DEFAULT_THICKNESS));
 		if (isDashed()) {
 			//g.setStroke(dashed);
 			int S = 8;

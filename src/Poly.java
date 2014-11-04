@@ -1,4 +1,5 @@
 import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.geom.Rectangle2D;
@@ -36,6 +37,8 @@ public class Poly extends Shape {
 	
 	@Override
 	public void draw(Graphics2D g) {
+		g.setColor(Constants.DEFAULT_COLOR);
+		g.setStroke(new BasicStroke(Constants.DEFAULT_THICKNESS));
 		if (isDashed()) {
 			//g.setStroke(dashed);
 			int S = 8;

@@ -10,6 +10,7 @@ import javax.swing.JToolBar;
 import java.awt.FlowLayout;
 
 import javax.swing.ButtonGroup;
+import javax.swing.JColorChooser;
 import javax.swing.JToggleButton;
 import javax.swing.SwingConstants;
 import javax.swing.JSeparator;
@@ -39,6 +40,7 @@ public class GUI extends JFrame {
 	private JPanel contentPane;
 	static int drawState = Constants.MOVE;
 	static int drawThick = 1 ;
+	static Color drawColor = Color.BLACK;
 	//private int selectedButton[] = new int[10];
 	ButtonGroup buttonGroup = new ButtonGroup();
 
@@ -51,6 +53,8 @@ public class GUI extends JFrame {
 				try {
 					GUI frame = new GUI();
 					frame.setVisible(true);
+					GUI frame2 = new GUI();
+					frame2.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -163,9 +167,20 @@ public class GUI extends JFrame {
 		toolBar.add(separator);
 		
 		JToggleButton tglbtnColor = new JToggleButton("Color");
+		tglbtnColor.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {				
+				drawColor = JColorChooser.showDialog(null, "Change Foreground Color",
+			            drawColor);
+			}
+		});
 		toolBar.add(tglbtnColor);
 		
 		JToggleButton tglbtnFill = new JToggleButton("Fill");
+		tglbtnColor.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {				
+				drawState = Constants.FILL ;
+			}
+		});
 		toolBar.add(tglbtnFill);
 		
 		buttonGroup.add(tglbtnMove);
@@ -176,6 +191,8 @@ public class GUI extends JFrame {
 		buttonGroup.add(tglbtnRectangle);
 		buttonGroup.add(tglbtnTriangle);
 		buttonGroup.add(tglbtnPolygon);
+		buttonGroup.add(tglbtnColor);
+		buttonGroup.add(tglbtnFill);
 		
 		
 		JLabel lblThickness = new JLabel("Thickness");
@@ -191,12 +208,12 @@ public class GUI extends JFrame {
 		comboBox.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"}));
 		comboBox.setMaximumSize(new Dimension(70, 30));
 		toolBar.add(comboBox);
-		
+				
 		JPanel panel = new GUIPanel();
 		
 		panel.setBackground(Color.WHITE);
 		contentPane.add(panel, BorderLayout.CENTER);
-		
+
 	}
 
 }

@@ -30,7 +30,6 @@ public class GUIPanel extends JPanel {
 
 	class MyMouseListener extends MouseAdapter {
 		public void mousePressed(MouseEvent e) {
-			System.out.println(GUI.drawState);
 			if (GUI.drawState == Constants.RECTANGLE) {
 				int x[] = new int[4];
 				int y[] = new int[4];
@@ -89,9 +88,19 @@ public class GUIPanel extends JPanel {
 					curCursor = Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
 				}
 			}
-			
-			if (GUI.drawState != Constants.MOVE)
+			else if(GUI.drawState == Constants.FILL)
+			{
+				int selectedShape2 = Shape.getSelectedShape(e.getX(), e.getY());
+				if(selectedShape2 !=-1)
+				{
+					Shape.shapes.get(selectedShape2).setFilled(true);
+					Shape.shapes.get(selectedShape2).setFill(GUI.drawColor);
+				}
+			}
+			if (GUI.drawState != Constants.MOVE && GUI.drawState != Constants.FILL) {
 				Shape.shapes.get(Shape.shapes.size()-1).setThickness(GUI.drawThick);
+				Shape.shapes.get(Shape.shapes.size()-1).setColor(GUI.drawColor);
+			}
 			
 			GUI.drawState = Constants.MOVE;
 			repaint();
@@ -112,7 +121,6 @@ public class GUIPanel extends JPanel {
 				int dy = yFinal - yInit;
 				xInit = xFinal;
 				yInit = yFinal;
-				System.out.println(boundaryIndex);
 				if (boundaryIndex != -1)
 					Shape.shapes.get(selectedShape).resize(dx, dy,
 							boundaryIndex);

@@ -1,4 +1,5 @@
 import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
@@ -31,11 +32,14 @@ public class Circle extends Shape {
 		this.a = a;
 		this.b = b;
 		this.isCircle = isCircle;
+		boundries = new Rectangle2D.Double[4];
 		updatePoints();
 	}
 
 	@Override
 	public void draw(Graphics2D g) {
+		g.setColor(Constants.DEFAULT_COLOR);
+		g.setStroke(new BasicStroke(Constants.DEFAULT_THICKNESS));
 		if (isDashed()) {
 			// g.setStroke(dashed);
 			int S = 8;
