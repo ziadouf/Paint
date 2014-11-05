@@ -67,6 +67,14 @@ public class Triangle extends Poly {
 		updatePoints();
 	}
 	
+	@Override
+	public int isBoundary(int x, int y) {
+		for (int i=boundries.length-1 ; i>=0 ; i--) {
+			if (boundries[i].contains(x,y)) return i;
+		}
+		
+		return -1;
+	}
 	
 	@Override
 	public void updatePoints() {

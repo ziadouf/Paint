@@ -269,6 +269,14 @@ public class GUI extends JFrame {
 		});
 		toolBar.add(tglbtnFill);
 		
+		JToggleButton tglbtnDelete = new JToggleButton("Delete");
+		tglbtnDelete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {				
+				drawState = Constants.DELETE ;
+			}
+		});
+		toolBar.add(tglbtnDelete);
+		
 		buttonGroup.add(tglbtnMove);
 		buttonGroup.add(tglbtnLine);
 		buttonGroup.add(tglbtnEllipse);
@@ -279,7 +287,7 @@ public class GUI extends JFrame {
 		buttonGroup.add(tglbtnPolygon);
 		buttonGroup.add(tglbtnColor);
 		buttonGroup.add(tglbtnFill);
-		
+		buttonGroup.add(tglbtnDelete);
 		
 		JLabel lblThickness = new JLabel("Thickness");
 		lblThickness.setFont(new Font("Lucida Grande", Font.PLAIN, 11));

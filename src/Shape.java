@@ -69,6 +69,10 @@ public abstract class Shape {
 		GUI.isChanged = true;
 	}
 	
+	public static void delete (int index) {
+		shapes.remove(index);
+		GUI.isChanged = true;
+	}
 	
 	public static void addShapeVector () {
 		ArrayList <Shape> vec = new ArrayList<Shape>();

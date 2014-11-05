@@ -100,6 +100,12 @@ public class GUIPanel extends JPanel {
 					Shape.shapes.get(selectedShape).setFill(GUI.drawColor);
 				}
 			}
+			else if(GUI.drawState == Constants.DELETE)
+			{
+				selectedShape = Shape.getSelectedShape(e.getX(), e.getY());
+				if(selectedShape !=-1) Shape.delete(selectedShape);
+			}
+			
 			if (GUI.drawState != Constants.MOVE && GUI.drawState != Constants.FILL) {
 				Shape.shapes.get(Shape.shapes.size()-1).setThickness(GUI.drawThick);
 				Shape.shapes.get(Shape.shapes.size()-1).setColor(GUI.drawColor);
