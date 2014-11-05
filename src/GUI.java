@@ -11,6 +11,7 @@ import java.awt.FlowLayout;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JColorChooser;
+import javax.swing.JOptionPane;
 import javax.swing.JToggleButton;
 import javax.swing.SwingConstants;
 import javax.swing.JSeparator;
@@ -27,11 +28,19 @@ import java.awt.Component;
 
 import javax.swing.JMenuItem;
 
+import com.thoughtworks.xstream.XStream;
+
 import java.awt.SystemColor;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 
@@ -41,8 +50,9 @@ public class GUI extends JFrame {
 	static int drawState = Constants.MOVE;
 	static int drawThick = 1 ;
 	static Color drawColor = Color.BLACK;
+	static boolean isChanged = false;
 	//private int selectedButton[] = new int[10];
-	ButtonGroup buttonGroup = new ButtonGroup();
+	static ButtonGroup buttonGroup = new ButtonGroup();
 
 	/**
 	 * Launch the application.
@@ -53,8 +63,6 @@ public class GUI extends JFrame {
 				try {
 					GUI frame = new GUI();
 					frame.setVisible(true);
-					GUI frame2 = new GUI();
-					frame2.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -67,32 +75,110 @@ public class GUI extends JFrame {
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public GUI() {
+		XStream xstream = new XStream();
+		
+		Shape.addShapeVector();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 700, 500);
+
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(new BorderLayout(0, 0));
+		
+		JPanel panel = new GUIPanel();
+		panel.setBackground(Color.WHITE);
+		contentPane.add(panel, BorderLayout.CENTER);
 		
 		JMenuBar menuBar = new JMenuBar();
 		menuBar.setBackground(SystemColor.textHighlight);
 		setJMenuBar(menuBar);
 		
 		JMenuItem mntmSave = new JMenuItem("Save");
+		mntmSave.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String xml = "";
+				xml = xstream.toXML(Shape.shapes);
+
+				PrintWriter out = null;
+				try {
+					out = new PrintWriter("PaintBrush.xml");
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				out.println(xml);
+				out.close();
+
+				//ArrayList <Shape> ob1 = (ArrayList<Shape>) xstream.fromXML(xml);
+			}
+		});
 		mntmSave.setBackground(Color.WHITE);
 		menuBar.add(mntmSave);
 		
 		JMenuItem mntmLoad = new JMenuItem("Load");
+		mntmLoad.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String xml = "";
+				BufferedReader in = null;
+				try {
+					in = new BufferedReader(new FileReader("PaintBrush.xml"));
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				String line ;
+				try {
+					while (( line = in.readLine()) != null) 
+					{
+						xml += line ;
+					}
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				Shape.allShapes.clear();
+				Shape.setIndex(-1);
+				Shape.shapes = (ArrayList<Shape>) xstream.fromXML(xml);
+				Shape.addShapeVector();
+				try {
+					in.close();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				panel.repaint();
+			}
+		});
 		menuBar.add(mntmLoad);
 		
 		JMenuItem mntmUndo = new JMenuItem("Undo");
+		mntmUndo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					Shape.undo();
+				} catch (Exception e1) {
+					JOptionPane.showMessageDialog(null, "No previous history.", "Warning", JOptionPane.WARNING_MESSAGE);
+				}
+				panel.repaint();
+			}
+		});
 		menuBar.add(mntmUndo);
 		
 		JMenuItem mntmRedo = new JMenuItem("Redo");
+		mntmRedo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					Shape.redo();
+				} catch (Exception e1) {
+					JOptionPane.showMessageDialog(null, "End of history.", "Warning", JOptionPane.WARNING_MESSAGE);				}
+				panel.repaint();
+			}
+		});
 		menuBar.add(mntmRedo);
 		
 		JMenuItem mntmLoadClass = new JMenuItem("Load Class");
 		menuBar.add(mntmLoadClass);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		contentPane.setLayout(new BorderLayout(0, 0));
 		
 		JToolBar toolBar = new JToolBar();
 		toolBar.setOrientation(SwingConstants.VERTICAL);
@@ -176,7 +262,7 @@ public class GUI extends JFrame {
 		toolBar.add(tglbtnColor);
 		
 		JToggleButton tglbtnFill = new JToggleButton("Fill");
-		tglbtnColor.addActionListener(new ActionListener() {
+		tglbtnFill.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {				
 				drawState = Constants.FILL ;
 			}
@@ -205,14 +291,9 @@ public class GUI extends JFrame {
 				drawThick = Integer.parseInt((String) comboBox.getSelectedItem());
 			}
 		});
-		comboBox.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"}));
+		comboBox.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3", "4", "5", "6", "7"}));
 		comboBox.setMaximumSize(new Dimension(70, 30));
 		toolBar.add(comboBox);
-				
-		JPanel panel = new GUIPanel();
-		
-		panel.setBackground(Color.WHITE);
-		contentPane.add(panel, BorderLayout.CENTER);
 
 	}
 

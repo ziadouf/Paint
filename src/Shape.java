@@ -12,11 +12,14 @@ public abstract class Shape {
 	private boolean isDashed;
 	private boolean isFilled ;
 	protected Double[] boundries;
-	final static ArrayList<Shape> shapes = new ArrayList<Shape>();
+	private static int index = -1 ;
+	static ArrayList < ArrayList<Shape> > allShapes = new ArrayList < ArrayList<Shape> >();
+	static ArrayList<Shape> shapes = new ArrayList<Shape>();
+	
 	final static float dash1[] = { 10.0f };
 	final static BasicStroke dashed = new BasicStroke(1.0f,
 			BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, dash1, 0.0f);
-
+	
 	public Color getColor() {
 		return color;
 	}
@@ -57,11 +60,78 @@ public abstract class Shape {
 		this.isFilled = isFilled;
 	}
 
-	public static final void addShape(Shape S) {
-		shapes.add(S);
+	public static void setIndex(int index) {
+		Shape.index = index;
 	}
+	
+	public static void addShape(Shape S) {
+		shapes.add(S);
+		GUI.isChanged = true;
+	}
+	
+	
+	public static void addShapeVector () {
+		ArrayList <Shape> vec = new ArrayList<Shape>();
+		for (int i=0 ; i<shapes.size() ; i++)
+		{			
+			vec.add(shapes.get(i).copy());
+		}
+		
+		while (allShapes.size() > index+1) {
+			allShapes.remove(allShapes.size()-1);
+		}
+		allShapes.add(vec);
+		index ++ ;
+	}
+	
+	public static void undo () throws Exception
+	{
+		index -- ;
+		if(index<0) {
+			index = 0;
+			System.out.println("HEEERE" + index);
+			throw new Exception();
+		}
+		else {
+			shapes = new ArrayList <Shape>();
+			for (int i=0 ; i<allShapes.get(index).size() ; i++) {
+				shapes.add(allShapes.get(index).get(i).copy());
+			}
+			System.out.println("Current: " + shapes);
+			System.out.println("============");
+			for (int i=0 ; i<allShapes.size() ; i++) {
+				System.out.println(allShapes.get(i));
+			}
+			System.out.println("============");
+			System.out.println();
 
-	public final static int getSelectedShape(int x, int y) {
+		}
+	}
+	
+	public static void redo() throws Exception
+	{
+		index ++ ;
+		if(index >= allShapes.size()) 
+		{
+			index = allShapes.size()-1 ;
+			throw new Exception();
+		}
+		else {
+			shapes = new ArrayList <Shape>();
+			for (int i=0 ; i<allShapes.get(index).size() ; i++) {
+				shapes.add(allShapes.get(index).get(i).copy());
+			}
+			System.out.println("Current: " + shapes);
+			System.out.println("============");
+			for (int i=0 ; i<allShapes.size() ; i++) {
+				System.out.println(allShapes.get(i));
+			}
+			System.out.println("============");
+			System.out.println();
+		}
+	}
+	
+	public static int getSelectedShape(int x, int y) {
 		for (int i=0 ; i<shapes.size() ; i++) {
 			shapes.get(i).setDashed(false);
 		}
@@ -82,16 +152,16 @@ public abstract class Shape {
 		
 		return -1;
 	}
-
+	
 	abstract public void draw(Graphics2D g);
-
-	abstract public void fill(Graphics2D g);
 
 	abstract public void move(int dx, int dy);
 
 	abstract public boolean contains(int x, int y);
 	
 	abstract public void resize(int dx, int dy , int index);
+	
+	abstract public Shape copy ();
 	
 	abstract public void updatePoints();
 }

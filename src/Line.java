@@ -39,16 +39,12 @@ public class Line extends Shape {
 	}
 
 	@Override
-	public void fill(Graphics2D g) {
-		return;
-	}
-
-	@Override
 	public void move(int dx, int dy) {
 		this.x1 += dx;
 		this.x2 += dx;
 		this.y1 += dy;
 		this.y2 += dy;
+		GUI.isChanged = true;
 		updatePoints();
 	}
 
@@ -78,6 +74,16 @@ public class Line extends Shape {
 		for (int i=0 ; i<xBounds.length ; i++) {
 			boundries[i] = new Rectangle2D.Double(xBounds[i]-S/2, yBounds[i]-S/2, S, S);
 		}
+	}
+
+	@Override
+	public Shape copy() {
+		Line newShape = new Line(x1,y1,x2,y2);
+		newShape.setColor(getColor());
+		newShape.setThickness(getThickness());
+		newShape.setFilled(isFilled());
+		newShape.setFill(getFill());
+		return newShape;
 	}
 
 }

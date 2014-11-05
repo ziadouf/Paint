@@ -5,9 +5,6 @@ import java.awt.geom.Rectangle2D;
 
 public class Rect extends Poly {
 	
-	private int x1,y1;
-	private int x2,y2;
-	
 	Rect(int[] x, int[] y, int length) {
 		super(x, y, length);
 	}
@@ -45,6 +42,7 @@ public class Rect extends Poly {
 			yPoly[2] += dy;
 			yPoly[3] += dy;
 		}
+		GUI.isChanged = true;
 		updatePoints();
 	}
 	
@@ -57,4 +55,13 @@ public class Rect extends Poly {
 		}
 	}
 	
+	@Override
+	public Shape copy() {
+		Rect newShape = new Rect(xPoly,yPoly,length,isRegular);
+		newShape.setColor(getColor());
+		newShape.setThickness(getThickness());
+		newShape.setFilled(isFilled());
+		newShape.setFill(getFill());
+		return newShape;
+	}
 }

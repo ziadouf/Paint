@@ -6,6 +6,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 
+import javax.swing.ButtonModel;
 import javax.swing.JPanel;
 
 public class GUIPanel extends JPanel {
@@ -90,11 +91,13 @@ public class GUIPanel extends JPanel {
 			}
 			else if(GUI.drawState == Constants.FILL)
 			{
-				int selectedShape2 = Shape.getSelectedShape(e.getX(), e.getY());
-				if(selectedShape2 !=-1)
+				selectedShape = Shape.getSelectedShape(e.getX(), e.getY());
+				if(selectedShape !=-1)
 				{
-					Shape.shapes.get(selectedShape2).setFilled(true);
-					Shape.shapes.get(selectedShape2).setFill(GUI.drawColor);
+					if (!Shape.shapes.get(selectedShape).isFilled() || Shape.shapes.get(selectedShape).getFill() != GUI.drawColor)
+						GUI.isChanged = true;
+					Shape.shapes.get(selectedShape).setFilled(true);
+					Shape.shapes.get(selectedShape).setFill(GUI.drawColor);
 				}
 			}
 			if (GUI.drawState != Constants.MOVE && GUI.drawState != Constants.FILL) {
@@ -108,6 +111,10 @@ public class GUIPanel extends JPanel {
 
 		public void mouseReleased(MouseEvent e) {
 			curCursor = Cursor.getDefaultCursor();
+			//GUI.buttonGroup.getSelection().doClick();
+			if (GUI.isChanged) Shape.addShapeVector();
+			GUI.isChanged = false;
+			System.out.println(Shape.allShapes.size());
 			repaint();
 		}
 	}

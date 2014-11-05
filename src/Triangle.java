@@ -63,6 +63,7 @@ public class Triangle extends Poly {
 			yPoly[2] += dy;
 			yPoly[3] += dy;
 		}
+		GUI.isChanged = true;
 		updatePoints();
 	}
 	
@@ -80,6 +81,16 @@ public class Triangle extends Poly {
 		for (int i=1 ; i<xPoly.length ; i++) {
 			boundries[i] = new Rectangle2D.Double(triX[i-1]-S/2, triY[i-1]-S/2, S, S);
 		}
+	}
+	
+	@Override
+	public Shape copy() {
+		Triangle newShape = new Triangle(xPoly,yPoly,length);
+		newShape.setColor(getColor());
+		newShape.setThickness(getThickness());
+		newShape.setFilled(isFilled());
+		newShape.setFill(getFill());
+		return newShape;
 	}
 	
 }

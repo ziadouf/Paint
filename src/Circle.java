@@ -57,15 +57,10 @@ public class Circle extends Shape {
 	}
 
 	@Override
-	public void fill(Graphics2D g) {
-		g.setColor(getFill());
-		g.fillOval(x, y, a, b);
-	}
-
-	@Override
 	public void move(int dx, int dy) {
 		this.x += dx;
 		this.y += dy;
+		GUI.isChanged = true;
 		updatePoints();
 	}
 
@@ -94,6 +89,7 @@ public class Circle extends Shape {
 			if (isCircle)
 				this.a = this.b;
 		}
+		GUI.isChanged = true;
 		updatePoints();
 	}
 
@@ -113,6 +109,16 @@ public class Circle extends Shape {
 			boundries[i] = new Rectangle2D.Double(xBounds[i] - S / 2,
 					yBounds[i] - S / 2, S, S);
 		}
+	}
+
+	@Override
+	public Shape copy() {
+		Circle newShape = new Circle (x,y,a,b,isCircle);
+		newShape.setColor(getColor());
+		newShape.setThickness(getThickness());
+		newShape.setFilled(isFilled());
+		newShape.setFill(getFill());
+		return newShape;
 	}
 
 }

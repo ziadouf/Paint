@@ -12,7 +12,7 @@ public class Poly extends Shape {
 	protected int yPoly[];
 	protected int length;
 	protected Polygon P;
-	protected boolean isRegular;
+	protected boolean isRegular = false;
 	
 	Poly (int x[] , int y[] , int length) {
 		this.xPoly = x;
@@ -56,17 +56,12 @@ public class Poly extends Shape {
 	}
 
 	@Override
-	public void fill(Graphics2D g) {
-		g.setColor(getFill());
-		g.fillPolygon(P);
-	}
-
-	@Override
 	public void move(int dx , int dy) {
 		for (int i=0 ; i<length ; i++) {
 			xPoly[i] += dx;
 			yPoly[i] += dy;
 		}
+		GUI.isChanged = true;
 		updatePoints();
 	}
 
@@ -78,6 +73,7 @@ public class Poly extends Shape {
 
 	@Override
 	public void resize(int dx, int dy, int index) {
+		GUI.isChanged = true;
 	}
 
 	@Override
@@ -87,6 +83,16 @@ public class Poly extends Shape {
 		for (int i=0 ; i<xPoly.length ; i++) {
 			boundries[i] = new Rectangle2D.Double(xPoly[i]-S/2, yPoly[i]-S/2, S, S);
 		}
+	}
+
+	@Override
+	public Shape copy() {
+		Poly newShape = new Poly(xPoly,yPoly,length,isRegular);
+		newShape.setColor(getColor());
+		newShape.setThickness(getThickness());
+		newShape.setFilled(isFilled());
+		newShape.setFill(getFill());
+		return newShape;
 	}
 	
 }
