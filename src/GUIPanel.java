@@ -5,9 +5,11 @@ import java.awt.Graphics2D;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.util.ArrayList;
 
 import javax.swing.ButtonModel;
 import javax.swing.JPanel;
+import javax.swing.JToggleButton;
 
 public class GUIPanel extends JPanel {
 
@@ -27,10 +29,20 @@ public class GUIPanel extends JPanel {
 	int xInit, yInit, xFinal, yFinal;
 	Cursor curCursor;
 	int selectedShape = -1;
+	static ArrayList <Integer> selectedIndices = new ArrayList<Integer>();
 	int boundaryIndex = -1;
 
 	class MyMouseListener extends MouseAdapter {
 		public void mousePressed(MouseEvent e) {
+			selectedShape = Shape.getSelectedShape(e.getX(), e.getY());
+			if (!e.isControlDown()) {
+				selectedIndices.clear();
+			}
+			if (selectedShape != -1) {
+				if (!selectedIndices.contains(selectedShape))
+					selectedIndices.add(selectedShape);
+			}
+			System.out.println("SSS  " + selectedIndices.size());
 			if (GUI.drawState == Constants.RECTANGLE) {
 				int x[] = new int[4];
 				int y[] = new int[4];
@@ -80,7 +92,6 @@ public class GUIPanel extends JPanel {
 				}
 				Shape.addShape(new Triangle(x, y, x.length));
 			} else if (GUI.drawState == Constants.MOVE) {
-				selectedShape = Shape.getSelectedShape(e.getX(), e.getY());
 				if (selectedShape != -1) {
 					boundaryIndex = Shape.shapes.get(selectedShape).isBoundary(
 							e.getX(), e.getY());
@@ -91,7 +102,6 @@ public class GUIPanel extends JPanel {
 			}
 			else if(GUI.drawState == Constants.FILL)
 			{
-				selectedShape = Shape.getSelectedShape(e.getX(), e.getY());
 				if(selectedShape !=-1)
 				{
 					if (!Shape.shapes.get(selectedShape).isFilled() || Shape.shapes.get(selectedShape).getFill() != GUI.drawColor)
@@ -102,7 +112,6 @@ public class GUIPanel extends JPanel {
 			}
 			else if(GUI.drawState == Constants.DELETE)
 			{
-				selectedShape = Shape.getSelectedShape(e.getX(), e.getY());
 				if(selectedShape !=-1) Shape.delete(selectedShape);
 			}
 			
@@ -117,7 +126,7 @@ public class GUIPanel extends JPanel {
 
 		public void mouseReleased(MouseEvent e) {
 			curCursor = Cursor.getDefaultCursor();
-			//GUI.buttonGroup.getSelection().doClick();
+			//GUI.tglbtnMove.doClick();
 			if (GUI.isChanged) Shape.addShapeVector();
 			GUI.isChanged = false;
 			System.out.println(Shape.allShapes.size());
@@ -138,11 +147,14 @@ public class GUIPanel extends JPanel {
 					Shape.shapes.get(selectedShape).resize(dx, dy,
 							boundaryIndex);
 				else
-					Shape.shapes.get(selectedShape).move(dx, dy);
+				{
+					for (int i=0 ; i<selectedIndices.size() ; i++)
+					Shape.shapes.get(selectedIndices.get(i)).move(dx, dy);
+				}
 				Shape S = Shape.shapes.get(selectedShape);
-				Shape.shapes.remove(selectedShape);
-				Shape.shapes.add(S);
-				selectedShape = Shape.shapes.size() - 1;
+				//Shape.shapes.remove(selectedShape);
+				//Shape.shapes.add(S);
+				//selectedShape = Shape.shapes.size() - 1;
 			}
 			repaint();
 		}

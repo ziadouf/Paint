@@ -53,7 +53,8 @@ public class GUI extends JFrame {
 	static boolean isChanged = false;
 	//private int selectedButton[] = new int[10];
 	static ButtonGroup buttonGroup = new ButtonGroup();
-
+	static JToggleButton tglbtnMove;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -184,7 +185,7 @@ public class GUI extends JFrame {
 		toolBar.setOrientation(SwingConstants.VERTICAL);
 		contentPane.add(toolBar, BorderLayout.WEST);
 		
-		JToggleButton tglbtnMove = new JToggleButton("Move");
+		tglbtnMove = new JToggleButton("Move");
 		tglbtnMove.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {				
 				drawState = Constants.MOVE;
@@ -271,8 +272,11 @@ public class GUI extends JFrame {
 		
 		JToggleButton tglbtnDelete = new JToggleButton("Delete");
 		tglbtnDelete.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {				
-				drawState = Constants.DELETE ;
+			public void actionPerformed(ActionEvent e) {
+				for (int i=0 ; i<GUIPanel.selectedIndices.size() ; i++) {
+					Shape.delete(GUIPanel.selectedIndices.get(i));
+				}
+				panel.repaint();
 			}
 		});
 		toolBar.add(tglbtnDelete);
