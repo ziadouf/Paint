@@ -42,6 +42,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 
 public class GUI extends JFrame {
@@ -53,7 +54,7 @@ public class GUI extends JFrame {
 	static boolean isChanged = false;
 	//private int selectedButton[] = new int[10];
 	static ButtonGroup buttonGroup = new ButtonGroup();
-	static JToggleButton tglbtnMove;
+	static ArrayList <JToggleButton> toggleButtons = new ArrayList <JToggleButton>(); 
 	
 	/**
 	 * Launch the application.
@@ -148,6 +149,7 @@ public class GUI extends JFrame {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+				GUIPanel.selectedIndices.clear();
 				panel.repaint();
 			}
 		});
@@ -161,6 +163,7 @@ public class GUI extends JFrame {
 				} catch (Exception e1) {
 					JOptionPane.showMessageDialog(null, "No previous history.", "Warning", JOptionPane.WARNING_MESSAGE);
 				}
+				GUIPanel.selectedIndices.clear();
 				panel.repaint();
 			}
 		});
@@ -173,6 +176,7 @@ public class GUI extends JFrame {
 					Shape.redo();
 				} catch (Exception e1) {
 					JOptionPane.showMessageDialog(null, "End of history.", "Warning", JOptionPane.WARNING_MESSAGE);				}
+				GUIPanel.selectedIndices.clear();
 				panel.repaint();
 			}
 		});
@@ -185,13 +189,14 @@ public class GUI extends JFrame {
 		toolBar.setOrientation(SwingConstants.VERTICAL);
 		contentPane.add(toolBar, BorderLayout.WEST);
 		
-		tglbtnMove = new JToggleButton("Move");
+		JToggleButton tglbtnMove = new JToggleButton("Move");
 		tglbtnMove.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {				
 				drawState = Constants.MOVE;
 			}
 		});
 		toolBar.add(tglbtnMove);
+		toggleButtons.add(tglbtnMove);
 		
 		JToggleButton tglbtnLine = new JToggleButton("Line");
 		tglbtnLine.addActionListener(new ActionListener() {
@@ -200,6 +205,7 @@ public class GUI extends JFrame {
 			}
 		});
 		toolBar.add(tglbtnLine);
+		toggleButtons.add(tglbtnLine);
 		
 		JToggleButton tglbtnEllipse = new JToggleButton("Ellipse");
 		tglbtnEllipse.addActionListener(new ActionListener() {
@@ -208,6 +214,7 @@ public class GUI extends JFrame {
 			}
 		});
 		toolBar.add(tglbtnEllipse);
+		toggleButtons.add(tglbtnEllipse);
 		
 		JToggleButton tglbtnCircle = new JToggleButton("Circle");
 		tglbtnCircle.addActionListener(new ActionListener() {
@@ -216,6 +223,7 @@ public class GUI extends JFrame {
 			}
 		});
 		toolBar.add(tglbtnCircle);
+		toggleButtons.add(tglbtnCircle);
 		
 		JToggleButton tglbtnRectangle = new JToggleButton("Rectangle");
 		tglbtnRectangle.addActionListener(new ActionListener() {
@@ -224,6 +232,7 @@ public class GUI extends JFrame {
 			}
 		});
 		toolBar.add(tglbtnRectangle);
+		toggleButtons.add(tglbtnRectangle);
 		
 		JToggleButton tglbtnSquare = new JToggleButton("Square");
 		tglbtnSquare.addActionListener(new ActionListener() {
@@ -232,6 +241,7 @@ public class GUI extends JFrame {
 			}
 		});
 		toolBar.add(tglbtnSquare);
+		toggleButtons.add(tglbtnSquare);
 		
 		JToggleButton tglbtnTriangle = new JToggleButton("Triangle");
 		tglbtnTriangle.addActionListener(new ActionListener() {
@@ -240,6 +250,7 @@ public class GUI extends JFrame {
 			}
 		});
 		toolBar.add(tglbtnTriangle);
+		toggleButtons.add(tglbtnTriangle);
 		
 		JToggleButton tglbtnPolygon = new JToggleButton("Polygon");
 		tglbtnPolygon.addActionListener(new ActionListener() {
@@ -248,6 +259,7 @@ public class GUI extends JFrame {
 			}
 		});
 		toolBar.add(tglbtnPolygon);
+		toggleButtons.add(tglbtnPolygon);
 		
 		JSeparator separator = new JSeparator();
 		separator.setMaximumSize(new Dimension(32767, 20));
@@ -261,6 +273,7 @@ public class GUI extends JFrame {
 			}
 		});
 		toolBar.add(tglbtnColor);
+		toggleButtons.add(tglbtnColor);
 		
 		JToggleButton tglbtnFill = new JToggleButton("Fill");
 		tglbtnFill.addActionListener(new ActionListener() {
@@ -269,13 +282,19 @@ public class GUI extends JFrame {
 			}
 		});
 		toolBar.add(tglbtnFill);
+		toggleButtons.add(tglbtnFill);
 		
 		JToggleButton tglbtnDelete = new JToggleButton("Delete");
 		tglbtnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				Collections.sort(GUIPanel.selectedIndices);
+				Collections.reverse(GUIPanel.selectedIndices);
 				for (int i=0 ; i<GUIPanel.selectedIndices.size() ; i++) {
+					System.out.println(Shape.shapes.get(GUIPanel.selectedIndices.get(i)));
 					Shape.delete(GUIPanel.selectedIndices.get(i));
 				}
+				GUIPanel.selectedIndices.clear();
+				tglbtnDelete.setSelected(false);
 				panel.repaint();
 			}
 		});
@@ -291,7 +310,6 @@ public class GUI extends JFrame {
 		buttonGroup.add(tglbtnPolygon);
 		buttonGroup.add(tglbtnColor);
 		buttonGroup.add(tglbtnFill);
-		buttonGroup.add(tglbtnDelete);
 		
 		JLabel lblThickness = new JLabel("Thickness");
 		lblThickness.setFont(new Font("Lucida Grande", Font.PLAIN, 11));

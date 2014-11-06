@@ -70,9 +70,10 @@ public class Circle extends Shape {
 	}
 
 	public void resize(int dx, int dy, int index) {
-		if (index == 0) {
+		if (index == 0 || index == 2) {
 			this.y += dy;
 			this.b -= dy;
+			this.a += dx;
 			if (isCircle)
 				this.a = this.b;
 		} else if (index == 1) {

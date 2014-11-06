@@ -310,66 +310,72 @@
     <isFilled>true</isFilled>
     <boundries>
       <java.awt.geom.Rectangle2D_-Double>
-        <x>382.0</x>
-        <y>190.0</y>
+        <x>386.0</x>
+        <y>191.0</y>
         <width>8.0</width>
         <height>8.0</height>
       </java.awt.geom.Rectangle2D_-Double>
       <java.awt.geom.Rectangle2D_-Double>
-        <x>382.0</x>
-        <y>190.0</y>
+        <x>386.0</x>
+        <y>191.0</y>
         <width>8.0</width>
         <height>8.0</height>
       </java.awt.geom.Rectangle2D_-Double>
       <java.awt.geom.Rectangle2D_-Double>
-        <x>365.0</x>
-        <y>233.0</y>
+        <x>369.0</x>
+        <y>234.0</y>
         <width>8.0</width>
         <height>8.0</height>
       </java.awt.geom.Rectangle2D_-Double>
       <java.awt.geom.Rectangle2D_-Double>
-        <x>399.0</x>
-        <y>233.0</y>
+        <x>403.0</x>
+        <y>234.0</y>
         <width>8.0</width>
         <height>8.0</height>
       </java.awt.geom.Rectangle2D_-Double>
     </boundries>
     <xPoly>
-      <int>403</int>
-      <int>369</int>
-      <int>369</int>
-      <int>403</int>
+      <int>407</int>
+      <int>373</int>
+      <int>373</int>
+      <int>407</int>
     </xPoly>
     <yPoly>
-      <int>194</int>
-      <int>194</int>
-      <int>237</int>
-      <int>237</int>
+      <int>195</int>
+      <int>195</int>
+      <int>238</int>
+      <int>238</int>
     </yPoly>
     <length>4</length>
     <P>
       <npoints>3</npoints>
       <xpoints>
-        <int>386</int>
-        <int>369</int>
-        <int>403</int>
+        <int>390</int>
+        <int>373</int>
+        <int>407</int>
       </xpoints>
       <ypoints>
-        <int>194</int>
-        <int>237</int>
-        <int>237</int>
+        <int>195</int>
+        <int>238</int>
+        <int>238</int>
       </ypoints>
+      <bounds>
+        <x>373</x>
+        <y>195</y>
+        <width>34</width>
+        <height>43</height>
+      </bounds>
     </P>
     <isRegular>false</isRegular>
     <triX>
-      <int>0</int>
-      <int>0</int>
-      <int>0</int>
+      <int>390</int>
+      <int>373</int>
+      <int>407</int>
     </triX>
     <triY>
-      <int>0</int>
-      <int>0</int>
-      <int>0</int>
+      <int>195</int>
+      <int>238</int>
+      <int>238</int>
     </triY>
   </Triangle>
   <Line>

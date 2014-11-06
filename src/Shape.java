@@ -136,17 +136,27 @@ public abstract class Shape {
 	}
 	
 	public static int getSelectedShape(int x, int y) {
-		for (int i=0 ; i<shapes.size() ; i++) {
-			shapes.get(i).setDashed(false);
-		}
+//		for (int i=0 ; i<shapes.size() ; i++) {
+//			shapes.get(i).setDashed(false);
+//		}
 		for (int i = shapes.size() - 1; i >= 0; i--) {
 			if (shapes.get(i).contains(x, y)) {
-				shapes.get(i).setDashed(true);
+//				shapes.get(i).setDashed(true);
 				return i;
 			}
 		}
 		return -1;
 
+	}
+	
+	public static void selectShapes (ArrayList <Integer> selectedIndices) {
+		for (int i=0 ; i<shapes.size() ; i++) {
+			shapes.get(i).setDashed(false);
+		}
+		for (int i=0 ; i<selectedIndices.size() ; i++) {
+			shapes.get(selectedIndices.get(i)).setDashed(true);
+		}
+		
 	}
 	
 	public int isBoundary(int x, int y) {

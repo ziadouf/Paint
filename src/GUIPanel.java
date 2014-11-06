@@ -42,7 +42,8 @@ public class GUIPanel extends JPanel {
 				if (!selectedIndices.contains(selectedShape))
 					selectedIndices.add(selectedShape);
 			}
-			System.out.println("SSS  " + selectedIndices.size());
+			Shape.selectShapes(selectedIndices);
+//			System.out.println("SSS  " + selectedIndices.size());
 			if (GUI.drawState == Constants.RECTANGLE) {
 				int x[] = new int[4];
 				int y[] = new int[4];
@@ -126,8 +127,13 @@ public class GUIPanel extends JPanel {
 
 		public void mouseReleased(MouseEvent e) {
 			curCursor = Cursor.getDefaultCursor();
-			//GUI.tglbtnMove.doClick();
-			if (GUI.isChanged) Shape.addShapeVector();
+			if (GUI.isChanged) {
+				for (int i=0 ; i<GUI.toggleButtons.size() ; i++)
+				if (GUI.toggleButtons.get(i).isSelected()) {
+					GUI.toggleButtons.get(i).doClick();
+				}
+				Shape.addShapeVector();
+			}
 			GUI.isChanged = false;
 			System.out.println(Shape.allShapes.size());
 			repaint();
