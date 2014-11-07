@@ -8,15 +8,19 @@ import java.awt.geom.Rectangle2D.Double;
 
 public class Circle extends Shape {
 
-	private int a;
-	private int b;
 	private int x;
 	private int y;
+	private int a;
+	private int b;
 	private int xBounds[] = new int[4];
 	private int yBounds[] = new int[4];
 	private Ellipse2D E;
 	private boolean isCircle = false;
-
+	private int drawX;
+	private int drawY;
+	private int drawA;
+	private int drawB;
+	
 	Circle(int x, int y, int a, int b) {
 		this.x = x;
 		this.y = y;
@@ -39,21 +43,31 @@ public class Circle extends Shape {
 	@Override
 	public void draw(Graphics2D g) {
 		g.setColor(Constants.DEFAULT_COLOR);
+		g.setStroke(new BasicStroke(5));
 		g.setStroke(new BasicStroke(Constants.DEFAULT_THICKNESS));
 		if (isDashed()) {
 			// g.setStroke(dashed);
-			int S = 8;
 			for (int i = 0; i < xBounds.length; i++) {
-				g.drawRect(xBounds[i] - S / 2, yBounds[i] - S / 2, S, S);
+				g.draw(boundries[i]);
 			}
 		}
 		g.setColor(getColor());
 		g.setStroke(new BasicStroke(getThickness()));
-		g.drawOval(x, y, a, b);
+		
+		g.draw(E);
 		if (isFilled()) {
 			g.setColor(getFill());
-			g.fillOval(x, y, a, b);
+			g.fill(E);
 		}
+		
+//		if (isDashed()) {
+//			for (int i = 0; i < xBounds.length; i++) {
+//				//g.setStroke(new BasicStroke(3));
+//				g.setColor(new Color(102,178,255));
+//				g.fillOval((int)boundries[i].getMinX(), (int)boundries[i].getMinY(), 10, 10);
+//				//g.draw(boundries[i]);
+//			}
+//		}
 	}
 
 	@Override
@@ -70,25 +84,30 @@ public class Circle extends Shape {
 	}
 
 	public void resize(int dx, int dy, int index) {
-		if (index == 0 || index == 2) {
-			this.y += dy;
-			this.b -= dy;
-			this.a += dx;
-			if (isCircle)
-				this.a = this.b;
-		} else if (index == 1) {
-			this.x += dx;
-			this.a -= dx;
-			if (isCircle)
-				this.b = this.a;
-		} else if (index == 2) {
-			this.a += dx;
-			if (isCircle)
-				this.b = this.a;
-		} else {
-			this.b += dy;
-			if (isCircle)
-				this.a = this.b;
+		if (isCircle) {
+			System.out.println("INDEX: " + index);
+			int dr = dx;
+			if (index == 0 || index == 3) dr = dy;
+			if (index == 0 || index == 1) dr *= -1;
+			this.a += dr*2;
+			this.b += dr*2;
+			this.x -= dr;
+			this.y -= dr;
+		}
+		else
+		{
+			if (index == 0) {
+				this.y += dy;
+				this.b -= dy;
+				this.a += dx;
+			} else if (index == 1) {
+				this.x += dx;
+				this.a -= dx;
+			} else if (index == 2) {
+				this.a += dx;
+			} else {
+				this.b += dy;
+			}
 		}
 		GUI.isChanged = true;
 		updatePoints();
@@ -96,20 +115,37 @@ public class Circle extends Shape {
 
 	@Override
 	public void updatePoints() {
-		E = new Ellipse2D.Double(x, y, a, b);
+		drawX = this.x;
+		drawY = this.y;
+		drawA = this.a;
+		drawB = this.b;
+		
+		if (a < 0) {
+			drawA *= -1;
+			drawX += a;
+		}
+		if (b < 0) {
+			drawB *= -1;
+			drawY += b;
+		}
+		
+		E = new Ellipse2D.Double(drawX, drawY, drawA, drawB);
+		
 		xBounds[0] = (int) E.getCenterX();
-		yBounds[0] = (int) E.getMinY();
-		xBounds[1] = (int) E.getMinX();
+		yBounds[0] = (b >= 0) ? (int) E.getMinY() : (int) E.getMaxY();
+		xBounds[1] = (a >= 0) ? (int) E.getMinX() : (int) E.getMaxX();
 		yBounds[1] = (int) E.getCenterY();
-		xBounds[2] = (int) E.getMaxX();
+		xBounds[2] = (a >= 0) ? (int) E.getMaxX() : (int) E.getMinX();
 		yBounds[2] = (int) E.getCenterY();
 		xBounds[3] = (int) E.getCenterX();
-		yBounds[3] = (int) E.getMaxY();
+		yBounds[3] = (b >= 0) ? (int) E.getMaxY() : (int) E.getMinY();
+		
 		int S = 8;
 		for (int i = 0; i < xBounds.length; i++) {
 			boundries[i] = new Rectangle2D.Double(xBounds[i] - S / 2,
 					yBounds[i] - S / 2, S, S);
 		}
+		
 	}
 
 	@Override

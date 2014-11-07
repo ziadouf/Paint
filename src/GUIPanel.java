@@ -149,9 +149,14 @@ public class GUIPanel extends JPanel {
 				int dy = yFinal - yInit;
 				xInit = xFinal;
 				yInit = yFinal;
-				if (boundaryIndex != -1)
+				if (boundaryIndex != -1) {
+					int currentBoundary = Shape.shapes.get(selectedShape).isBoundary(
+							e.getX(), e.getY());
+					//if (currentBoundary != -1) boundaryIndex = currentBoundary;
+					
 					Shape.shapes.get(selectedShape).resize(dx, dy,
 							boundaryIndex);
+				}
 				else
 				{
 					for (int i=0 ; i<selectedIndices.size() ; i++)

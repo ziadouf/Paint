@@ -4,6 +4,7 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.JMenuBar;
 import javax.swing.JToolBar;
 
@@ -11,6 +12,7 @@ import java.awt.FlowLayout;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JColorChooser;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JToggleButton;
 import javax.swing.SwingConstants;
@@ -101,18 +103,23 @@ public class GUI extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				String xml = "";
 				xml = xstream.toXML(Shape.shapes);
-
-				PrintWriter out = null;
-				try {
-					out = new PrintWriter("PaintBrush.xml");
-				} catch (FileNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+				JFileChooser saveDialog = new JFileChooser();				
+				int userSelection = saveDialog.showSaveDialog(null);
+				
+				if (userSelection == JFileChooser.APPROVE_OPTION) {
+					String filePath = saveDialog.getSelectedFile().getAbsolutePath();
+					if (!filePath.endsWith(".xml")) filePath += ".xml";
+					System.out.println(filePath);
+					PrintWriter out = null;
+					try {
+						out = new PrintWriter(filePath);
+					} catch (FileNotFoundException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					out.println(xml);
+					out.close();
 				}
-				out.println(xml);
-				out.close();
-
-				//ArrayList <Shape> ob1 = (ArrayList<Shape>) xstream.fromXML(xml);
 			}
 		});
 		mntmSave.setBackground(Color.WHITE);
@@ -121,36 +128,43 @@ public class GUI extends JFrame {
 		JMenuItem mntmLoad = new JMenuItem("Load");
 		mntmLoad.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String xml = "";
-				BufferedReader in = null;
-				try {
-					in = new BufferedReader(new FileReader("PaintBrush.xml"));
-				} catch (FileNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				String line ;
-				try {
-					while (( line = in.readLine()) != null) 
-					{
-						xml += line ;
+				JFileChooser openDialog = new JFileChooser();
+				FileNameExtensionFilter filter = new FileNameExtensionFilter("XML *.xml", "xml");
+				openDialog.setFileFilter(filter);
+				int userSelection = openDialog.showOpenDialog(null);
+				if (userSelection == JFileChooser.APPROVE_OPTION) {
+					String filePath = openDialog.getSelectedFile().getAbsolutePath();
+					String xml = "";
+					BufferedReader in = null;
+					try {
+						in = new BufferedReader(new FileReader(filePath));
+					} catch (FileNotFoundException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
 					}
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					String line ;
+					try {
+						while (( line = in.readLine()) != null) 
+						{
+							xml += line ;
+						}
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					Shape.allShapes.clear();
+					Shape.setIndex(-1);
+					Shape.shapes = (ArrayList<Shape>) xstream.fromXML(xml);
+					Shape.addShapeVector();
+					try {
+						in.close();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					GUIPanel.selectedIndices.clear();
+					panel.repaint();
 				}
-				Shape.allShapes.clear();
-				Shape.setIndex(-1);
-				Shape.shapes = (ArrayList<Shape>) xstream.fromXML(xml);
-				Shape.addShapeVector();
-				try {
-					in.close();
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				GUIPanel.selectedIndices.clear();
-				panel.repaint();
 			}
 		});
 		menuBar.add(mntmLoad);
